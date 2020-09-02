@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<div id="profile-container">
+    <div class="profile-info">
+        <div class="profile-icon">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        
+        <h2 class="profile-username">
+            
+        </h2>
+        
+        <h3 class="profile-h3">
+            
+        </h3>
+        <h3 class="profile-h3">
+            
+        </h3>
+        <h3 class="profile-h3">
+            
+        </h3>
+    </div>
+
+
+    <div class="like-note">
+            {% for i in pro_info.liked_posts.all %}
+        <a href="">23233</a>
+    </div>
+{%endfor%}
+
+        <div class="logout">
+        <a href="{% url 'signout' %}">로그아웃</a>
+        </div>
+</div>
+
+
+
+{%endblock%}

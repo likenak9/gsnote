@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<div class="my_form_container2">
+    <div class="my_form_wrapper2">
+        <form method="post">
+        <div class="header2">
+        로그인
+        </div>
+        
+        {% csrf_token %}
+        {{form.as_p}}
+        
+        <div class="final2">
+        <button style="width: 470px" type="submit" value="회원가입" class="my_submit2"> LOGIN </button>
+        </div>
+        
+        </form>
+    {% load account %}
+    {% load socialaccount %}
+    <a href="{% provider_login_url "naver" %}"><button style="border: 0; background: none; width:227px !important;" value="naver_login" class="naver_login"><img src="{% static 'img/naver_login.png'%}" alt="네이버로로그인" width="227px"></button></a>
+    <a href="{% provider_login_url "kakao" %}"><button style="border: 0; background: none; width:227px !important;" value="kakao_login" class="kakao_login"><img src="{% static 'img/kakao_login.png'%}" alt="카카오로로그인" width="227px"></button></a>
+        <a href="{% url 'signup' %}"> <h4> SIGNUP </h4></a>  
+    
+</div>
+</div>  
+
+{%endblock%}
+

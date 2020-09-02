@@ -1,0 +1,378 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}" type="text/css" />
+<script type="text/javascript" src="{% static 'js/map.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/MarkerClustering.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div id="filter" class="filter_wrap">
+        <div class="filter_area">
+            <div>
+                <label>
+                <input type="checkbox" class="option-input1 checkbox" name='1' checked>
+  
+                
+                </label>
+                <label>
+                <input type="checkbox" class="option-input2 checkbox" name='2' checked />
+               
+                </label>
+                <label>
+                <input type="checkbox" class="option-input3 checkbox" checked />
+                
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="map_wrap">
+        <div id="map" class="expanded">
+    
+            <script>
+            
+            var mapOptions = {
+                center: new naver.maps.LatLng('{{gs_center.LAT}}', '{{gs_center.LNG}}'),
+                zoom: 13
+                
+            };
+            
+            var map = new naver.maps.Map('map', mapOptions);
+            
+            var markers = [];
+            
+            </script>
+            
+            {%for i in gs_context%}
+            <script>
+            var marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng('{{i.LAT}}','{{i.LNG}}'),
+                map: map,
+                icon: {
+                    {% if i.PJT_FIN_YN_NM == "진행" %}
+                    content:'<a href="{% url "detail" i.PJT_CD %}" class="gradient-btn1">{{i.PJT_FIN_YN_NM}}</a>',
+                    {%else%}
+                    content:'<a href="{% url "detail" i.PJT_CD %}" class="gradient-btn2">{{i.PJT_FIN_YN_NM}}</a>',
+                    {%endif%}
+                    
+                },
+                
+            });
+            
+            markers.push(marker);
+            </script>
+            {%endfor%}
+            
+            <script>
+            function overMarker(childID){
+                $("#"+childID).show();
+            }
+            
+            function outMarker(childID){
+                $("#"+childID).hide();
+            }
+            
+            $(document).ready(function(){
+                var htmlMarker1 = {
+                    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(https://navermaps.github.io/maps.js/docs/img/cluster-marker-1.png);background-size:contain;"></div>',
+                    size: N.Size(40, 40),
+                    anchor: N.Point(20, 20)
+            },
+            htmlMarker2 = {
+                    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(https://navermaps.github.io/maps.js/docs/img/cluster-marker-2.png);background-size:contain;"></div>',
+                    size: N.Size(40, 40),
+                    anchor: N.Point(20, 20)
+            },
+            htmlMarker3 = {
+                    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(https://navermaps.github.io/maps.js/docs/img/cluster-marker-3.png);background-size:contain;"></div>',
+                    size: N.Size(40, 40),
+                    anchor: N.Point(20, 20) 
+            },
+            htmlMarker4 = {
+                    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(https://navermaps.github.io/maps.js/docs/img/cluster-marker-4.png);background-size:contain;"></div>',
+                    size: N.Size(40, 40),
+                    anchor: N.Point(20, 20)
+            },
+            htmlMarker5 = {
+                    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(https://navermaps.github.io/maps.js/docs/img/cluster-marker-5.png);background-size:contain;"></div>',
+                    size: N.Size(40, 40),
+                    anchor: N.Point(20, 20)
+            };
+            
+            var markerClustering = new MarkerClustering({
+                    minClusterSize: 1,
+                    maxZoom: 12,
+                    map: map,
+                    markers: markers,
+                    disableClickZoom: false,
+                    gridSize: 120,
+                    icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+                    indexGenerator: [10, 100, 200, 500, 1000], stylingFunction: function(clusterMarker, count) {
+                    $(clusterMarker.getElement()).find('div:first-child').text(count);
+                    }
+                });
+            });
+            
+            </script>
+            
+            
+
+        </div>
+    {% if gs_detail %}
+    <div id="scene-info">
+            <div class="info-detail">
+                <div class="info-1-wrap">
+                <legend>공사정보</legend>
+                    <div class="header-info">
+                        <h1>
+                        {{gs_detail.PJT_NAME}}
+                        </h1>
+                        <h2 class="address">
+                        {{gs_detail.OFFICE_ADDR}}
+                        </h2>
+                        <h2>
+                            주무기관은 <b>{{gs_detail.ORG_1}}</b> 이고, 담당자는 <b>{{gs_detail.USER_1}}</b> 입니다.
+                        </h2>
+                         <a href="#" class="btn-close">☆</a>
+                        
+                        
+                    </div>
+                </div>
+                <div class="tiny-scroll" style="overflow: visible; user-select: none;">
+                    <div class="result">
+                        <div class="card"></div>
+                        <div class="card visitor-info-card">
+                            <h2>공사 현장 조회인원</h2>
+                        </div>
+                        <div class="card">
+                            <div class="scale-type-button-container">
+                                {% if gs_detail.PJT_FIN_YN_NM == "진행" %}
+                                <div class="box-btn-type" style="background-color:#ec7357;">
+                                    {{gs_detail.PJT_FIN_YN_NM}}
+                                </div>
+                                {%else%}
+      
+                                <div class="box-btn-type">
+                                    {{gs_detail.PJT_FIN_YN_NM}}
+                                </div>
+                                {%endif%}
+                            </div>
+                            <div class="scale-type-button-container">
+                                {% if gs_detail.TOT_CNTRT_AMT > '10' %}
+                                <div class="box-btn-type">
+                                     대규모
+                                </div>
+                                {%else%}
+                                <div class="box-btn-type">
+                                    소규모
+                                </div>
+                                {%endif%}
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="detail-info-container">
+                                <div class="info-days">
+                                    <h3 class="title">
+                                        총 공사 기간
+                                    </h3>
+                                    <div class="day">{{gs_detail.DT1}}</div>
+                                    <div class="trade-info-days">
+                                        <h3 class="title">
+                                        남은 공사 기간
+                                        </h3>
+                                        {% if gs_detail.PJT_FIN_YN == "1" %}
+                                        <div class="day">
+                                            {{gs_detail.DT3}} days
+                                        </div>
+                                        {%else%}
+                                        <div class="day" style="font-size:14px;">
+                                            공사가 완료되었습니다.
+                                        </div>
+                                        {%endif%}
+                                    </div>
+                                    
+                                </div>
+                                <div class="progress-wrap">
+                                    <progress class="progressTag" value="0" max="100">
+                                    </progress>
+                                </div>
+                                <div class="progress-type">
+                                </div>
+                                <div class="info-days">
+                                    <h3 class="title">
+                                        2020.08.02
+                                    </h3>
+                                    <div class="trade-info-days">
+                                    <h3 class="title">
+                                        2020.09.12
+                                     </h3>
+                                        
+                                    </div>
+                                    
+                                </div>
+                                <div class="detail-wrap">
+                                    <div class="update-at">
+                                    해당 공정의 기준일자는 {{gs_detail.BASIC_DT}}입니다.<br>
+                                    </div>
+                                    <table cellspacing="0" cellpadding="0" class="list">
+                                        <thead>
+                                            <tr class="thead-tr">
+                                                <td class="thead-td">항목</td>
+                                                <td class="thead-td">정보</td>
+                                            </tr>
+                                        </thead>
+                                    <tbody>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                건축구분
+                                            </td>
+                                            <td class="tbody-td2">신축</td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                대지면적
+                                            </td>
+                                            <td class="tbody-td2"></td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                건축면적
+                                            </td>
+                                            <td class="tbody-td2"></td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                건폐율
+                                            </td>
+                                            <td class="tbody-td2"></td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                연면적
+                                            </td>
+                                            <td class="tbody-td2"></td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                용적률
+                                            </td>
+                                            <td class="tbody-td2"></td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                주용도
+                                            </td>
+                                            <td class="tbody-td2"></td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                준공여부
+                                            </td>
+                                            <td class="tbody-td2">{{gs_detail.PJT_FIN_YN_NM}}</td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                계획공정율
+                                            </td>
+                                            <td class="tbody-td2">{{gs_detail.PLAN_RT}}</td>
+                                        </tr>
+                                        <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                실적공정율
+                                            </td>
+                                            <td class="tbody-td2">{{gs_detail.REAL_RT}}</td>
+                                        </tr>
+                                         <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                도급액(억원)
+                                            </td>
+                                            <td class="tbody-td2">{{gs_detail.TOT_CNTRT_AMT}}</td>
+                                        </tr>
+                                         <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                사업비(억원)
+
+                                            </td>
+                                            <td class="tbody-td2">{{gs_detail.TOT_PJT_AMT}}</td>
+                                        </tr>
+                                         <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                공사기간
+                                            </td>
+                                            <td class="tbody-td2">{{gs.detail.DU_DATE}}</td>
+                                        </tr>
+                                         <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                발주처 담당자명
+                                            </td>
+                                            <td class="tbody-td2">{{gs.detail.USER_1}}</td>
+                                        </tr>
+                                         <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                책임감리원 명
+                                            </td>
+                                            <td class="tbody-td2">{{gs.detail.USER_2}}</td>
+                                        </tr>
+                                         <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                                현장대리인 명
+                                            </td>
+                                            <td class="tbody-td2">{{gs.detail.USER_3}}</td>
+                                        </tr>
+                                         <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                              발주처 기관명
+                                            </td>
+                                            <td class="tbody-td2">{{gs.detail.ORG_1}}</td>
+                                        </tr>
+                                         <tr class="tbody-tr">
+                                            <td class="tbody-td1">
+                                             감리사 업체명
+                                            </td>
+                                            <td class="tbody-td2">{{gs.detail.ORG_2}}</td>
+                                        </tr>
+                                         
+                                    </tbody>
+                                </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="info-builder">
+                                <h3 class="title">
+                                    총 사업비
+                                </h3>
+                                <div class="day">{{gs_detail.TOT_PJT_AMT}}</div>
+                                <h3 class="title" style="margin-top:18px;">
+                                    시공사
+                                </h3>
+                                {% if gs_detail.ORG_3 == '-' %}
+                                <div class="builder" style="font-size:20px; font-color:#eeeeee;">시공사가 확인되지 않았습니다.</div>
+                                {%else%}
+                                <div class="builder">{{gs_detail.ORG_3}}</div>        
+                                {%endif%}    
+                            </div>
+                            <div class="btn-wrap" style="margin-bottom:26px;">
+                                <button class="btn-profile">
+                                담당자 연락처 요청하기
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="scroll" style="height: 74px; top: 190px; opacity: 0.65;">
+                        <span class="top"></span>
+                        <span class="bottom"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {%endif%}
+    
+    </div>
+</div>
+
+
+{%endblock%}

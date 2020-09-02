@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<div class="my_form_container">
+    <div class="my_form_wrapper">
+        <div class="log-info">
+        회원가입
+        </div>
+        <form method="post">
+        {% csrf_token %}
+        {{user_form.as_p}}
+        
+        <div class="final">
+        <button type="submit" value="회원가입" class="my_submit"> 회원가입 </button><br>
+        </div>
+        
+        </form>
+    </div>
+</div>
+
+{%endblock%}
+
