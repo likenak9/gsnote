@@ -6,36 +6,57 @@
 
 {% block content %}
 <div id="profile-container">
-    <div class="profile-info">
-        <div class="profile-icon">
-            <i class="fas fa-user-circle"></i>
+    <div id="profile" class="profile-info">
+        <div class="column">
+            <div class="pr_group">
+                <div class="pr_header">
+                    <div class="pr_img">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <div class="pr_user">
+                        <span class="pr_name">
+                            {{user}}
+                        </span>
+                        <span class="pr_email">
+                            {{user.email}}
+                        </span>
+                        
+                    </div>
+                </div>
+                <div class="pr_content">
+                    <dl class="pr_lst">
+                        <dt>최초 가입일</dt>
+                        <dd>{{user.email}}</dd>
+                        <dt>비밀번호</dt>
+                        <dd>
+                            <a href="#" class="password_link">변경하기</a>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="pr_group">
+                <div class="pr_header">
+                    <h2>
+                        내가 저장한 공사 현장
+                    </h2>
+                </div>
+                <div class="pr_content">
+                    <p class="contxt">
+                        내가 즐겨찾기한 공사현장과 방문한 공사현장을 설정하여 보다 효율적인 영업활동을 하세요.
+                    </p>
+                </div>
+                <div class="like-note">
+
+                {% for i in pro_info.liked_posts.all %}
+                    <a href="">23233</a>
+                </div>
+                {%endfor%}
+            </div>
         </div>
-        
-        <h2 class="profile-username">
-            
-        </h2>
-        
-        <h3 class="profile-h3">
-            
-        </h3>
-        <h3 class="profile-h3">
-            
-        </h3>
-        <h3 class="profile-h3">
-            
-        </h3>
     </div>
-
-
-    <div class="like-note">
-            {% for i in pro_info.liked_posts.all %}
-        <a href="">23233</a>
-    </div>
-{%endfor%}
-
-        <div class="logout">
+    <div id="logout">
         <a href="{% url 'signout' %}">로그아웃</a>
-        </div>
+    </div>
 </div>
 
 

@@ -50,5 +50,6 @@ def profile(request,pk):
     pro_info = User.objects.get(id = pk)
     
     context['pro_info'] = pro_info
-    print(pro_info.profile.location)
+    print(pro_info.email)
     return render(request,'profile.html',context)
+    
